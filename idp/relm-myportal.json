@@ -1,6 +1,7 @@
 {
   "realm": "myportal",
   "enabled": true,
+  "sslRequired": "NONE",
   "displayName": "My Internal Realm",
   "roles": {
     "realm": [
@@ -13,15 +14,48 @@
       "clientId": "apache-client",
       "enabled": true,
       "protocol": "openid-connect",
-        "publicClient": true,
-        "secret": null,
-        "redirectUris": ["http://apache:80/redirect_uri", "http://localhost:80/redirect_uri"],
-        "webOrigins": ["*"],
-        "attributes": {
-            "access.token.lifespan": "300",
-            "id.token.lifespan": "300",
-            "refresh.token.lifespan": "1800"
-        }
+      "redirectUris": ["http://localhost"],
+      "webOrigins": ["*"],
+      "attributes": {
+          "access.token.lifespan": "3600",
+          "id.token.lifespan": "3600",
+          "refresh.token.lifespan": "3600",
+          "ssl-required": "NONE"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "alice",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Alice",
+      "lastName": "Anderson",
+      "email": "alice@example.com",
+      "credentials": [
+        { "type": "password", "value": "alice123", "temporary": false }
+      ],
+      "realmRoles": ["user"],
+      "attributes": {
+        "department": "Engineering",
+        "entitlementLevel": "gold"
+      }
+    },
+    {
+      "username": "bob",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Bob",
+      "lastName": "Brown",
+      "email": "bob@example.com",
+      "credentials": [
+        { "type": "password", "value": "bob123", "temporary": false }
+      ],
+      "realmRoles": ["user", "admin"],
+      "attributes": {
+        "department": "Finance",
+        "entitlementLevel": "platinum"
+      }
     }
   ]
 }

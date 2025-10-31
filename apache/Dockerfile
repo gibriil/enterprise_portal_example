@@ -1,17 +1,29 @@
-FROM debian:bookworm-slim
+FROM httpd:2.4-alpine
 
-RUN apt-get update \
-    && apt-get install -y apache2 curl libapache2-mod-auth-openidc \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+RUN rm -rf \
+    conf/extra/ \
+    conf/magic \
+    conf/original/
 
-RUN a2enmod mpm_event proxy proxy_fcgi auth_openidc headers rewrite deflate brotli mime env include
+WORKDIR /tmp
 
-COPY httpd.conf /etc/apache2/sites-available/000-default.conf
-COPY startup.sh /startup.sh
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+    && apk add --no-cache curl \
+    && apk add --no-cache apache2-utils \
+    && apk add --no-cache apache2 \
+    && apk add --no-cache apache-mod-auth-openidc \
+    && cp /usr/lib/apache2/mod_auth_openidc.so /usr/local/apache2/modules/ \
+    && rm -rf /var/cache/apk/* /tmp/*
 
-RUN chmod +x /startup.sh
+
+COPY httpd.conf /usr/local/apache2/conf/httpd.conf
+COPY wait-for-keycloak.sh /wait-for-keycloak.sh
+
+RUN chmod +x /wait-for-keycloak.sh
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=5 \
+    CMD curl -fsS http://keycloak:8080/realms/myportal/.well-known/openid-configuration || exit 1
 
 EXPOSE 80
 
-CMD ["/startup.sh"]
+CMD ["/wait-for-keycloak.sh"]
