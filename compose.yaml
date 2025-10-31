@@ -1,4 +1,4 @@
-version: "3.9"
+name: myPortal
 
 services:
   mysql:
@@ -12,6 +12,8 @@ services:
       MYSQL_PASSWORD: keycloakpass
     # volumes:
     #   - mysql_data:/var/lib/mysql
+    networks:
+      - enterprise
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0
@@ -19,6 +21,7 @@ services:
     command:
       - start-dev
       - --import-realm
+      - --http-enabled=true
     environment:
       KC_DB: mysql
       KC_DB_URL: jdbc:mysql://mysql:3306/keycloak
@@ -34,16 +37,33 @@ services:
       - mysql
     ports:
       - "8080:8080"
+    networks:
+      - enterprise
 
   apache:
     build: ./apache
     container_name: apache
     ports:
-      - "8081:80"
+      - "80:80"
     depends_on:
       - keycloak
     volumes:
       - "./sftp_content:/var/www/html/:ro"
+    networks:
+      - enterprise
+
+  php-fpm:
+    build: ./php-fpm
+    container_name: php-fpm
+    volumes:
+      - "./php-fpm/src:/var/www/html:ro"
+    environment:
+      - XDEBUG_MODE=develop,debug,trace
+    networks:
+      - enterprise
 
 volumes:
   mysql_data:
+
+networks:
+  enterprise: {}

@@ -1,12 +1,17 @@
-FROM httpd:2.4-alpine
+FROM debian:bookworm-slim
 
-RUN apk add --no-cache curl xmlsec-dev libxml2-dev openssl mod_auth_mellon bash
+RUN apt-get update \
+    && apt-get install -y apache2 curl libapache2-mod-auth-openidc \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY httpd.conf /usr/local/apache2/conf/httpd.conf
-COPY entrypoint.sh /entrypoint.sh
+RUN a2enmod mpm_event proxy proxy_fcgi auth_openidc headers rewrite deflate brotli mime env include
 
-RUN chmod +x /entrypoint.sh \
-    && mkdir -p /etc/httpd/mellon \
-    && chmod 700 /etc/httpd/mellon
+COPY httpd.conf /etc/apache2/sites-available/000-default.conf
+COPY startup.sh /startup.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
+RUN chmod +x /startup.sh
+
+EXPOSE 80
+
+CMD ["/startup.sh"]

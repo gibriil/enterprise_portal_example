@@ -11,68 +11,17 @@
   "clients": [
     {
       "clientId": "apache-client",
-      "protocol": "saml",
       "enabled": true,
-      "redirectUris": ["http://apache:80/*", "http://localhost:8081/*"],
-      "adminUrl": "http://localhost:8081/",
-      "baseUrl": "http://apache:80/",
-      "attributes": {
-        "saml.assertion.signature": "true",
-        "saml.force.post.binding": "true",
-        "saml.authnstatement": "true",
-        "saml.server.signature": "true",
-        "saml.client.signature": "true",
-        "saml.signature.algorithm": "RSA_SHA256",
-        "saml_name_id_format": "email"
-      },
-      "protocolMappers": [
-        {
-          "name": "Department",
-          "protocol": "saml",
-          "protocolMapper": "saml-user-attribute-mapper",
-          "consentRequired": false,
-          "config": {
-            "user.attribute": "department",
-            "friendly.name": "department",
-            "attribute.name": "department",
-            "attribute.nameformat": "Basic"
-          }
-        },
-        {
-          "name": "Entitlement Level",
-          "protocol": "saml",
-          "protocolMapper": "saml-user-attribute-mapper",
-          "consentRequired": false,
-          "config": {
-            "user.attribute": "entitlementLevel",
-            "friendly.name": "entitlementLevel",
-            "attribute.name": "entitlementLevel",
-            "attribute.nameformat": "Basic"
-          }
-        },
-        {
-          "name": "Role List",
-          "protocol": "saml",
-          "protocolMapper": "saml-role-list-mapper",
-          "consentRequired": false,
-          "config": {
-            "single": "true",
-            "attribute.name": "roles",
-            "attribute.nameformat": "Basic"
-          }
-        },
-        {
-          "name": "Combined Entitlements",
-          "protocol": "saml",
-          "protocolMapper": "saml-hardcoded-attribute-mapper",
-          "consentRequired": false,
-          "config": {
-            "attribute.name": "entitlements",
-            "attribute.nameformat": "Basic",
-            "attribute.value": "${roles},level:${user.attributes.entitlementLevel}"
-          }
+      "protocol": "openid-connect",
+        "publicClient": true,
+        "secret": null,
+        "redirectUris": ["http://apache:80/redirect_uri", "http://localhost:80/redirect_uri"],
+        "webOrigins": ["*"],
+        "attributes": {
+            "access.token.lifespan": "300",
+            "id.token.lifespan": "300",
+            "refresh.token.lifespan": "1800"
         }
-      ]
     }
   ]
 }

@@ -1,4 +1,4 @@
-# Enterprise Portal with SAML SSO
+# Enterprise Portal with OIDC SSO
 This is an example infrastructure for delivering password protected and personalized static content on Apache with a Go backend replacement for PHP. This model is perfect for Universities wanting a password protected portal/intranet with the Modern Campus CMS.
 
 **_This is should not be run as a production environment. This is only an example to inform how a production environment could be setup._**
@@ -17,7 +17,7 @@ You're probably wondering how the Modern Campus CMS plays into this. Modern Camp
 ## Questions and Answers
 
 - **Q:** Can I use any IdP or do I have to use Keycloak
-    - **A:** You should be able to use any IdP that supports SAML 2.0 Auth. Keycloak is used here for the sole purpose of having one all inclusive setup to run and test. Keycloak was the best option for an easy download and run example. Preferred enterprise options like Azure or Okta would not have been an easy setup nor secure. Accounts and Secrets would be required and would be problematic for user testing.
+    - **A:** You should be able to use any IdP. Keycloak is used here for the sole purpose of having one all inclusive setup to run and test. Keycloak was the best option for an easy download and run example. Preferred enterprise options like Azure or Okta would not have been an easy setup nor secure. Accounts and Secrets would be required and would be problematic for user testing.
 - **Q:** Are there not easier approaches?
     - **A:** Absolutely! There are usually many options for solving any problem. This example is meant to demonstrate a principle that can be applied to many situations. This example is most beneficial for academic institutions utilizing the Modern Campus CMS.
 - **Q:** Do I have to use Apache?
