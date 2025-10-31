@@ -11,10 +11,12 @@
   },
   "clients": [
     {
-      "clientId": "apache-client",
+      "clientId": "enterprise-portal-client-id",
+      "secret": "enterprise-portal-client-secret",
       "enabled": true,
       "protocol": "openid-connect",
-      "redirectUris": ["http://localhost"],
+      "publicClient": false,
+      "redirectUris": ["http://localhost/.oidc-redirect"],
       "webOrigins": ["*"],
       "attributes": {
           "access.token.lifespan": "3600",

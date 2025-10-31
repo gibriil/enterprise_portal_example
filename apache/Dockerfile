@@ -16,13 +16,10 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposi
     && rm -rf /var/cache/apk/* /tmp/*
 
 
-COPY httpd.conf /usr/local/apache2/conf/httpd.conf
+COPY /etc /usr/local/apache2/conf/
 COPY wait-for-keycloak.sh /wait-for-keycloak.sh
 
 RUN chmod +x /wait-for-keycloak.sh
-
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=5 \
-    CMD curl -fsS http://keycloak:8080/realms/myportal/.well-known/openid-configuration || exit 1
 
 EXPOSE 80
 
