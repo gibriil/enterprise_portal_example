@@ -5,6 +5,7 @@ import (
 	"expvar"
 	"net/http"
 	"net/http/fcgi"
+	"strings"
 
 	"github.com/gibriil/enterprise_portal_example/internal"
 	"github.com/gibriil/enterprise_portal_example/internal/helpers"
@@ -19,7 +20,15 @@ func CreateRouter(app *internal.Application) http.Handler {
 	server.HandleFunc("GET /test.go", func(res http.ResponseWriter, req *http.Request) {
 		_SERVER := fcgi.ProcessEnv(req)
 
-		data, err := json.Marshal(_SERVER)
+		claims := map[string]string{}
+
+		for claim, value := range _SERVER {
+			if strings.HasPrefix(claim, "OIDC_CLAIM_") {
+				claims[claim] = value
+			}
+		}
+
+		data, err := json.Marshal(claims)
 		if err != nil {
 			helpers.ServerError(app.Log, res, *req, err)
 		}

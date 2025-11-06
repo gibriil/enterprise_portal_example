@@ -7,21 +7,27 @@
     "realm": [
       { "name": "user", "description": "Standard user role" },
       { "name": "admin", "description": "Administrator role" }
-    ]
+    ],
+    "client": {
+      "enterprise-portal-client-id": [
+        { "name": "portal-user", "description": "Standard client role" },
+        { "name": "portal-admin", "description": "Administrator client role" }
+      ]
+    }
   },
   "groups": [
     {
       "name": "staff",
       "path": "/staff",
       "attributes": {
-        "entitlementTier": ["gold"]
+        "payScale": ["gold"]
       },
       "subGroups": [
         {
           "name": "executive",
           "path": "/staff/executive",
           "attributes": {
-            "entitlementTier": ["platinum"]
+            "payScale": ["platinum"]
           }
         }
       ]
@@ -30,7 +36,7 @@
       "name": "c-suit",
       "path": "/c-suit",
       "attributes": {
-        "entitlementTier": ["C-Level"]
+        "payScale": ["C-Level"]
       }
     }
   ],
@@ -51,7 +57,7 @@
       },
       "protocolMappers": [
         {
-          "name": "realm-roles",
+          "name": "roles",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-realm-role-mapper",
           "consentRequired": false,
@@ -59,7 +65,21 @@
             "multivalued": "true",
             "id.token.claim": "true",
             "access.token.claim": "true",
-            "claim.name": "realm_access.roles"
+            "claim.name": "realm_roles"
+          }
+        },
+        {
+          "name": "client roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-client-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "user.clientRoleMapping.clientId": "enterprise-portal-client-id",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "client_roles",
+            "jsonType.label": "String"
           }
         },
         {
@@ -96,7 +116,7 @@
           "protocolMapper": "oidc-group-membership-mapper",
           "config": {
             "full.path": "true",
-            "claim.name": "groups_full",
+            "claim.name": "groups_paths",
             "id.token.claim": "true",
             "access.token.claim": "true",
             "userinfo.token.claim": "true"
@@ -112,6 +132,24 @@
             "id.token.claim": "true",
             "access.token.claim": "true",
             "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "group-entitlementTier",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "full.path": "false",
+            "add.attributes": "true",
+            "attribute.name": "payScale",
+            "group.attribute": "payScale",
+            "claim.name": "group_entitlementTier",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "multivalued": "true",
+            "aggregate.attrs": "true"
           }
         }
       ]
@@ -129,6 +167,9 @@
         { "type": "password", "value": "alice123", "temporary": false }
       ],
       "realmRoles": ["user"],
+      "clientRoles": {
+        "enterprise-portal-client-id": ["portal-user"]
+      },
       "groups": ["/staff"],
       "attributes": {
         "department": "Engineering",
@@ -146,6 +187,9 @@
         { "type": "password", "value": "bob123", "temporary": false }
       ],
       "realmRoles": ["user", "admin"],
+      "clientRoles": {
+        "enterprise-portal-client-id": ["portal-user", "portal-admin"]
+      },
       "groups": ["/staff/executive", "/c-suit"],
       "attributes": {
         "department": "Finance",
