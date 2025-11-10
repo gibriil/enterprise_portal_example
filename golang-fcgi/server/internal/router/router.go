@@ -50,7 +50,7 @@ func CreateRouter(app *internal.Application) http.Handler {
 	server.HandleFunc("GET /user", func(res http.ResponseWriter, req *http.Request) {
 		user := app.CurrentReqContext.Value(internal.UserContext("user")).(models.User)
 
-		if authenticated := user.IsAuthenticated(); !authenticated {
+		if !user.Authenticated {
 			res.WriteHeader(http.StatusUnauthorized)
 			res.Write([]byte(user.Error()))
 			return

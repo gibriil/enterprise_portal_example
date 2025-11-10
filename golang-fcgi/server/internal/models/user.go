@@ -18,9 +18,10 @@ type User struct {
 	Roles             []string          `json:"roles"`
 	Groups            []string          `json:"groups"`
 	Claims            map[string]string `json:"claims"`
+	Authenticated     bool              `json:"-"`
 }
 
-func (user *User) IsAuthenticated() bool {
+func (user *User) isAuthenticated() bool {
 	return len(user.Claims) > 0
 }
 
@@ -50,6 +51,8 @@ func (user *User) LoadClaims(req *http.Request) error {
 	user.Roles = strings.Split(_SERVER["OIDC_CLAIM_realm_roles"], ",")
 
 	user.Roles = append(user.Roles, strings.Split(_SERVER["OIDC_CLAIM_client_roles"], ",")...)
+
+	user.Authenticated = user.isAuthenticated()
 
 	return nil
 }
