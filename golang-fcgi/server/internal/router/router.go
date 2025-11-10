@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"expvar"
 	"net/http"
-	"net/http/fcgi"
-	"strings"
 
 	"github.com/gibriil/enterprise_portal_example/internal"
 	"github.com/gibriil/enterprise_portal_example/internal/helpers"
@@ -18,17 +16,22 @@ func CreateRouter(app *internal.Application) http.Handler {
 	// documentation := openapi.Server(app.Log)
 
 	server.HandleFunc("GET /test.go", func(res http.ResponseWriter, req *http.Request) {
-		_SERVER := fcgi.ProcessEnv(req)
 
-		claims := map[string]string{}
+		user := app.CurrentReqContext.Value(internal.UserContext("user"))
 
-		for claim, value := range _SERVER {
-			if strings.HasPrefix(claim, "OIDC_CLAIM_") {
-				claims[claim] = value
-			}
+		data, err := json.Marshal(user)
+		if err != nil {
+			helpers.ServerError(app.Log, res, *req, err)
 		}
 
-		data, err := json.Marshal(claims)
+		res.Write(data)
+	})
+
+	server.HandleFunc("GET /user", func(res http.ResponseWriter, req *http.Request) {
+
+		user := app.CurrentReqContext.Value(internal.UserContext("user"))
+
+		data, err := json.Marshal(user)
 		if err != nil {
 			helpers.ServerError(app.Log, res, *req, err)
 		}

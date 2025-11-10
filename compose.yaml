@@ -34,15 +34,5 @@ services:
     networks:
       - enterprise
 
-  php-fpm:
-    build: ./php-fpm
-    container_name: php-fpm
-    volumes:
-      - "./php-fpm/src:/var/www/html:ro"
-    environment:
-      - XDEBUG_MODE=develop,debug,trace
-    networks:
-      - enterprise
-
 networks:
   enterprise: {}

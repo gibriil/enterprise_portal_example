@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/fcgi"
+	"strings"
 )
 
 type User struct {
@@ -25,7 +26,24 @@ func (user *User) Error() string {
 func (user *User) LoadClaims(req *http.Request) error {
 	_SERVER := fcgi.ProcessEnv(req)
 
-	fmt.Print(_SERVER)
+	user.Name = _SERVER["OIDC_CLAIM_name"]
+	user.GivenName = _SERVER["OIDC_CLAIM_given_name"]
+	user.FamilyName = _SERVER["OIDC_CLAIM_family_name"]
+	user.PreferredUsername = _SERVER["OIDC_CLAIM_preferred_username"]
+	user.Email = _SERVER["OIDC_CLAIM_email"]
+
+	user.Claims = map[string]string{}
+
+	for claim, value := range _SERVER {
+		if strings.HasPrefix(claim, "OIDC_CLAIM_") {
+			user.Claims[claim] = value
+		}
+	}
+
+	user.Roles = strings.Split(_SERVER["OIDC_CLAIM_realm_roles"], ",")
+
+	user.Roles = append(user.Roles, strings.Split(_SERVER["OIDC_CLAIM_client_roles"], ",")...)
+
 	return nil
 }
 
