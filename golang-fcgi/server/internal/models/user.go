@@ -16,11 +16,16 @@ type User struct {
 	Id                string            `json:"id"`
 	Email             string            `json:"email"`
 	Roles             []string          `json:"roles"`
+	Groups            []string          `json:"groups"`
 	Claims            map[string]string `json:"claims"`
 }
 
+func (user *User) IsAuthenticated() bool {
+	return len(user.Claims) > 0
+}
+
 func (user *User) Error() string {
-	return fmt.Sprintf("Error %d: %s", http.StatusUnauthorized, "myUVU user could not be created - check authentication claims/entitlements")
+	return fmt.Sprintf("Error %d: %s", http.StatusUnauthorized, "portal user could not be created - check authentication claims/entitlements")
 }
 
 func (user *User) LoadClaims(req *http.Request) error {
@@ -39,6 +44,8 @@ func (user *User) LoadClaims(req *http.Request) error {
 			user.Claims[claim] = value
 		}
 	}
+
+	user.Groups = strings.Split(_SERVER["OIDC_CLAIM_groups"], ",")
 
 	user.Roles = strings.Split(_SERVER["OIDC_CLAIM_realm_roles"], ",")
 
