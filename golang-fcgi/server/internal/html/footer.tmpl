@@ -1,8 +1,10 @@
 <footer id="globalFooter">
+    {{- if .Authenticated}}
     <div id="departmentFooter"><!--#include virtual="/_resources/includes/company-footer.inc"--></div>
+    {{end -}}
     <div id="companyFooter">
         <ul id="company-contact">
-            <li>N Center Str, City, State, zip</li>
+            <li>Middle of Our Str, City, State, zip</li>
             <li>+1 (800) 555-FCGI</li>
             <li>© Gibriil</li>
         </ul>

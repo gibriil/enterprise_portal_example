@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="<!--#echo var='language'-->" dir="ltr"
+    data-modified="<!--#echo var='LAST_MODIFIED' -->">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Dashboard | myPortal Example</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes" />
+        <meta name="color-scheme" content="only light" />
+        <meta name="description" content="A local CMS Portal example" />
+        <meta name="keywords" content="" />
+        <meta property="og:title" content="myPortal" />
+        <meta property="og:description" content="A local CMS Portal example" />
+        <meta property="og:image" content="/images/og-default.png" />
+        <meta property="og:image:alt" content="myPortal" />
+        <meta property="og:image:width" content="300" />
+        <meta property="og:image:height" content="300" />
+        <link type="text/css" rel="stylesheet" href="/_resources/css/wrapper.css" />
+        <link type="text/css" rel="stylesheet" href="/dashboard/lib/css/dept.css" />
+    </head>
+
+    <body id="dashboard">
+        <!--#include virtual="/header.go"-->
+        <main id="main-content" class="content-wrapper">
+            <section>
+                <header>Welcome <!--#include virtual="/user/name" --></header>
+            </section>
+        </main>
+        <script>
+            if (typeof portal === 'undefined') var portal = {};
+            portal.user = <!--#include virtual="/user"-->;
+            if (portal.user != null) {
+                sessionStorage.setItem('portal_user', JSON.stringify(portal.user));
+                portal.session = sessionStorage;
+            }
+        </script>
+        <!--#include virtual="/footer.go"-->
+    </body>
+
+</html>

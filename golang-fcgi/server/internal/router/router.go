@@ -2,9 +2,7 @@ package router
 
 import (
 	"expvar"
-	"io"
 	"net/http"
-	"os"
 	"text/template"
 
 	"github.com/gibriil/enterprise_portal_example/internal"
@@ -17,8 +15,6 @@ import (
 func CreateRouter(app *internal.Application) http.Handler {
 	server := http.NewServeMux()
 
-	// documentation := openapi.Server(app.Log)
-
 	server.HandleFunc("GET /header.go", func(res http.ResponseWriter, req *http.Request) {
 
 		template, err := template.ParseFS(html.WrapperTemplates, "header.tmpl")
@@ -28,11 +24,7 @@ func CreateRouter(app *internal.Application) http.Handler {
 
 		user := app.CurrentReqContext.Value(internal.UserContext("user")).(models.User)
 
-		template.Execute(io.MultiWriter(os.Stdout, res), user)
-		// res.Write([]byte(`<br />`))
-		// res.Write([]byte("<!--#include virtual=\"/_resources/include.inc\"-->"))
-		// res.Write([]byte(`<br />`))
-		// res.Write([]byte(fmt.Sprintf("Server Protocol: %s", user.Name)))
+		template.Execute(res, user)
 	})
 
 	server.HandleFunc("GET /footer.go", func(res http.ResponseWriter, req *http.Request) {
@@ -57,6 +49,16 @@ func CreateRouter(app *internal.Application) http.Handler {
 		}
 
 		res.Write(user.ToJson())
+	})
+
+	server.HandleFunc("GET /user/name", func(res http.ResponseWriter, req *http.Request) {
+		user := app.CurrentReqContext.Value(internal.UserContext("user")).(models.User)
+
+		res.Write([]byte(user.Name))
+	})
+
+	server.HandleFunc("GET /user/login/", func(res http.ResponseWriter, req *http.Request) {
+		http.Redirect(res, req, "/dashboard", http.StatusSeeOther)
 	})
 
 	// server.HandleFunc("/healthz", RouteHandler.HealthCheck(app))

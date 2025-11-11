@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/fcgi"
+	"slices"
 	"strings"
 )
 
@@ -19,14 +20,6 @@ type User struct {
 	Groups            []string          `json:"groups"`
 	Claims            map[string]string `json:"claims"`
 	Authenticated     bool              `json:"-"`
-}
-
-func (user *User) isAuthenticated() bool {
-	return len(user.Claims) > 0
-}
-
-func (user *User) Error() string {
-	return fmt.Sprintf("Error %d: %s", http.StatusUnauthorized, "portal user could not be created - check authentication claims/entitlements")
 }
 
 func (user *User) LoadClaims(req *http.Request) error {
@@ -52,9 +45,17 @@ func (user *User) LoadClaims(req *http.Request) error {
 
 	user.Roles = append(user.Roles, strings.Split(_SERVER["OIDC_CLAIM_client_roles"], ",")...)
 
-	user.Authenticated = user.isAuthenticated()
+	user.Authenticated = len(user.Claims) > 0
 
 	return nil
+}
+
+func (user *User) HasRole(role string) bool {
+	return slices.Contains(user.Roles, role)
+}
+
+func (user *User) HasGroupMembership(group string) bool {
+	return slices.Contains(user.Groups, group)
 }
 
 func (user *User) ToJson() []byte {
@@ -63,4 +64,8 @@ func (user *User) ToJson() []byte {
 		panic(err)
 	}
 	return data
+}
+
+func (user *User) Error() string {
+	return fmt.Sprintf("Error %d: %s", http.StatusUnauthorized, "portal user could not be created - check authentication claims/entitlements")
 }
