@@ -1,0 +1,5 @@
+main section[id] {
+    max-width: 1400px;
+    margin-inline: auto;
+    padding-block: 40px;
+}

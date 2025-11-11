@@ -58,6 +58,7 @@
             if (portal.user != null) {
                 sessionStorage.setItem('portal_user', JSON.stringify(portal.user));
                 portal.session = sessionStorage;
+                location = "/dashboard";
             }
         </script>
         <!--#include virtual="/footer.go"-->
