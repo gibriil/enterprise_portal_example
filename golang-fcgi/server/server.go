@@ -1,42 +1,43 @@
 package main
 
 import (
+	"encoding/json"
 	"log/slog"
+	"net"
+	"net/http"
+	"net/http/fcgi"
 	"os"
-	"path/filepath"
-
-	"github.com/gibriil/enterprise_portal_example/internal"
-	"github.com/gibriil/enterprise_portal_example/internal/helpers"
-	"github.com/gibriil/enterprise_portal_example/internal/router"
 )
 
 func main() {
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
-	conf, err := filepath.Abs("etc/conf.d/config.yaml")
+	listener, err := net.Listen("tcp", "0.0.0.0:9000")
 	if err != nil {
-		logger.Error(err.Error())
-		os.Exit(1)
+		logger.Error("Failed to make tcp connection")
 	}
-	// secrets, err := filepath.Abs("etc/conf.d/secrets.yaml")
-	// if err != nil {
-	// 	logger.Error(err.Error())
-	// 	os.Exit(1)
-	// }
+	defer listener.Close()
 
-	config := &internal.Configuration{
-		ServerConfig: helpers.OpenConfigYaml(logger, conf),
-		// Secrets:      helpers.OpenSecretsYaml(logger, secrets),
+	router := http.NewServeMux()
+
+	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		_SERVER := fcgi.ProcessEnv(r)
+
+		data, err := json.Marshal(_SERVER)
+		if err != nil {
+			panic(err)
+		}
+		w.Write(data)
+	})
+
+	server := &http.Server{
+		Addr:    "0.0.0.0:9000",
+		Handler: router,
 	}
 
-	app := &internal.Application{
-		Config: config,
-		Log:    logger,
-	}
+	logger.Info("Starting FCGI Go Server", slog.String("location", server.Addr))
 
-	app.Router = router.CreateRouter(app)
-
-	err = app.Serve()
+	err = fcgi.Serve(listener, server.Handler)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)

@@ -1,0 +1,6 @@
+SetHandler server-parsed
+SetOutputFilter INCLUDES
+
+ProxyFCGISetEnvIf true REQUEST_URI
+RewriteEngine On
+RewriteRule ^(.*\.go)$ "fcgi://host.docker.internal:9000/$1" [P,L,E=REQUEST_URI:]

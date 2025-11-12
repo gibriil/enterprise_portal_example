@@ -1,26 +1,19 @@
-FROM httpd:2.4-alpine
+FROM httpd:2.4
 
-RUN rm -rf \
-    conf/extra/ \
-    conf/magic \
-    conf/original/
+# Enable required Apache modules
+RUN sed -i \
+    -e 's/^#LoadModule include_module/LoadModule include_module/' \
+    -e 's/^#LoadModule proxy_module/LoadModule proxy_module/' \
+    -e 's/^#LoadModule proxy_fcgi_module/LoadModule proxy_fcgi_module/' \
+    -e 's/^#LoadModule proxy_http_module/LoadModule proxy_http_module/' \
+    -e 's/^#LoadModule rewrite_module/LoadModule rewrite_module/' \
+    -e 's/^#LoadModule headers_module/LoadModule headers_module/' \
+    -e 's/^#LoadModule mime_module/LoadModule mime_module/' \
+    -e 's/^#LoadModule setenvif_module/LoadModule setenvif_module/' \
+    /usr/local/apache2/conf/httpd.conf
 
-WORKDIR /tmp
+COPY httpd.conf /usr/local/apache2/conf/extra/000-default.conf
 
-RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
-    && apk add --no-cache curl \
-    && apk add --no-cache apache2-utils \
-    && apk add --no-cache apache2 \
-    && apk add --no-cache apache-mod-auth-openidc \
-    && cp /usr/lib/apache2/mod_auth_openidc.so /usr/local/apache2/modules/ \
-    && rm -rf /var/cache/apk/* /tmp/*
-
-
-COPY /etc /usr/local/apache2/conf/
-COPY wait-for-keycloak.sh /wait-for-keycloak.sh
-
-RUN chmod +x /wait-for-keycloak.sh
+RUN echo "Include conf/extra/000-default.conf" >> /usr/local/apache2/conf/httpd.conf
 
 EXPOSE 80
-
-CMD ["/wait-for-keycloak.sh"]

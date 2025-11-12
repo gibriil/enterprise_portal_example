@@ -1,1 +1,0 @@
-<span class="company-callout">myPortal</span> an authenticated portal example with SSI and FCGI
