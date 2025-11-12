@@ -8,6 +8,15 @@ body#login>main#main-content {
     padding-inline: calc((100vw - 1200px)/2);
 }
 
+#login > header {
+    font-size: 1.5rem;
+    text-align: center;
+    background-color: #331d00;
+    border-block-end: 25px solid #dbad61;
+    padding-block: 1rem;
+    color: white;
+}
+
 #login .portalTitle {
     font-size: 6.25rem;
     color: white;

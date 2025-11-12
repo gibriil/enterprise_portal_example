@@ -1,3 +1,4 @@
+{{- if .Authenticated }}
 <header id="globalHeader">
     <a class="skiptocontent sr-only" href="#main-content">Skip to main content</a>
     <div id="globalHeaderMain">
@@ -34,3 +35,8 @@
         </menu>
     </nav>
 </header>
+{{ else -}}
+<header>
+    Enterprise Portal Example
+</header>
+{{- end -}}
