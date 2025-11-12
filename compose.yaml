@@ -27,10 +27,28 @@ services:
     ports:
       - "80:80"
       - "8080:8080"
+      - "8500:8500"
     depends_on:
       - keycloak
     volumes:
+      - "./sftp_content:/var/www/html/1.25.3/:ro"
       - "./sftp_content:/var/www/html/:ro"
+    networks:
+      - enterprise
+
+  pre-change-715680:
+    build:
+      context: ./golang-fcgi
+      dockerfile: Dockerfile.fail
+    container_name: broken_go
+    networks:
+      - enterprise
+
+  golang:
+    build:
+      context: ./golang-fcgi
+      dockerfile: Dockerfile.success
+    container_name: working_go
     networks:
       - enterprise
 

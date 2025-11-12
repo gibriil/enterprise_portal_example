@@ -68,7 +68,7 @@
       "enabled": true,
       "protocol": "openid-connect",
       "publicClient": false,
-      "redirectUris": ["http://localhost/.oidc", "http://localhost/*"],
+      "redirectUris": ["http://localhost/.oidc", "http://localhost/*", "http://localhost:8500/.oidc", "http://localhost:8500/*"],
       "webOrigins": ["*"],
       "attributes": {
           "access.token.lifespan": "3600",

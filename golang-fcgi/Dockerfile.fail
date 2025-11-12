@@ -1,0 +1,19 @@
+FROM golang:1.25.3-alpine AS build
+
+RUN apk update && apk add --no-cache git ca-certificates tzdata && update-ca-certificates
+
+WORKDIR /app
+COPY ./server .
+RUN go mod download && go mod verify
+
+RUN GOOS=linux GOARCH=amd64 GOEXPERIMENT=jsonv2 go build -ldflags="-w -s" -o bin/server
+
+FROM scratch
+COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=build /usr/share/zoneinfo/America/Denver /etc/localtime
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /app/etc/ /etc
+COPY --from=build /app/bin/server /app/bin/
+
+EXPOSE 9000
+ENTRYPOINT ["/app/bin/server"]
