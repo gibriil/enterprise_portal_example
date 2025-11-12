@@ -87,11 +87,69 @@ main {
             padding: 0;
             display: flex;
 
+            > li {
+                position: relative;
+                width: fit-content;
+
+                menu {
+                    display: none;
+                    position: absolute;
+                    flex-direction: column;background-color: #f3f1ec;
+                    min-width: 100%;
+
+                    li { width: 100%; }
+
+                    a {
+                        display: block;
+                        width: 100%;
+                        white-space: nowrap;
+                        padding: 1em .5em;
+                        color:#331d00;
+
+                        &:hover,
+                        &:focus {
+                            background-color: #331d00;
+                            color: white;
+                            text-decoration: none;
+                        }
+                    }
+                }
+            }
+
             button {
                 all: unset;
                 padding: 15px 20px;
+                cursor: pointer;
+
+                &:hover, &:focus, &:has(+ menu:hover, + menu:focus-within) {
+                    background-color: #331d00;
+                    color: white;
+                }
+            }
+
+            li:has(#logout) {
+                justify-self: end;
+                margin-inline-start: auto;
+                margin-inline-end: 2rem;
+            }
+
+            a#logout {
+                display: block;
+                padding: 15px 20px;
+                text-decoration: none;
+                color: inherit;
+
+                &:hover, &:focus {
+                    background-color: #331d00;
+                    color: white;
+                }
             }
         }
+    }
+
+    nav menu li:has(button:hover, button:focus, menu:hover, menu:focus-within) button + menu {
+        display: block;
+        box-shadow: 5px 5px 10px rgba(0 0 0 / .3);
     }
 
     .skiptocontent {
@@ -107,21 +165,21 @@ main {
         top: 0;
         left: 50%;
         margin-left: -80px;
-        /* background-color: #275d38;
-    color: #fff; */
+        background-color: #331d00;
+        color: #fff;
         padding: 15px;
         z-index: var(--z-index-jenny);
 
         &:focus {
             width: auto;
             height: auto;
-            /* color: #fff; */
+            color: #fff;
             clip: auto;
             overflow: visible;
         }
 
         &:hover {
-            /* color: #fff; */
+            color: #fff;
         }
     }
 }

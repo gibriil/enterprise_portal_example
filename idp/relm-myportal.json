@@ -17,26 +17,47 @@
   },
   "groups": [
     {
-      "name": "staff",
-      "path": "/staff",
+      "name": "employee",
+      "path": "/employee",
       "attributes": {
-        "payScale": ["gold"]
+        "payScale": ["32"]
       },
       "subGroups": [
         {
-          "name": "executive",
-          "path": "/staff/executive",
+          "name": "part-time",
+          "path": "/employee/part-time",
           "attributes": {
-            "payScale": ["platinum"]
+            "payScale": ["33"]
+          }
+        },
+        {
+          "name": "full-time",
+          "path": "/employee/full-time",
+          "attributes": {
+            "payScale": ["34"]
           }
         }
       ]
     },
     {
-      "name": "c-suit",
-      "path": "/c-suit",
+      "name": "sales",
+      "path": "/sales",
       "attributes": {
-        "payScale": ["C-Level"]
+        "payScale": ["31"]
+      }
+    },
+    {
+      "name": "csr",
+      "path": "/csr",
+      "attributes": {
+        "payScale": ["35"]
+      }
+    },
+    {
+      "name": "team-lead",
+      "path": "/team-lead",
+      "attributes": {
+        "payScale": ["41"]
       }
     }
   ],
@@ -47,7 +68,7 @@
       "enabled": true,
       "protocol": "openid-connect",
       "publicClient": false,
-      "redirectUris": ["http://localhost/.oidc"],
+      "redirectUris": ["http://localhost/.oidc", "http://localhost/*"],
       "webOrigins": ["*"],
       "attributes": {
           "access.token.lifespan": "3600",
@@ -157,43 +178,83 @@
   ],
   "users": [
     {
-      "username": "alice",
+      "username": "csr",
       "enabled": true,
       "emailVerified": true,
-      "firstName": "Alice",
-      "lastName": "Anderson",
-      "email": "alice@example.com",
+      "firstName": "Charlie",
+      "lastName": "Chambers",
+      "email": "charlie.chambers@example.com",
       "credentials": [
-        { "type": "password", "value": "alice123", "temporary": false }
+        { "type": "password", "value": "password123", "temporary": false }
       ],
       "realmRoles": ["user"],
       "clientRoles": {
         "enterprise-portal-client-id": ["portal-user"]
       },
-      "groups": ["/staff"],
+      "groups": ["/employee", "/employee/full-time", "/csr"],
       "attributes": {
-        "department": "Engineering",
+        "department": "Inbound",
         "entitlementLevel": "gold"
       }
     },
     {
-      "username": "bob",
+      "username": "lead",
       "enabled": true,
       "emailVerified": true,
-      "firstName": "Bob",
+      "firstName": "bobbie",
       "lastName": "Brown",
-      "email": "bob@example.com",
+      "email": "bobbie.brown@example.com",
       "credentials": [
-        { "type": "password", "value": "bob123", "temporary": false }
+        { "type": "password", "value": "password123", "temporary": false }
+      ],
+      "realmRoles": ["user"],
+      "clientRoles": {
+        "enterprise-portal-client-id": ["portal-user"]
+      },
+      "groups": ["/employee", "/employee/full-time", "/team-lead"],
+      "attributes": {
+        "department": "leadership",
+        "entitlementLevel": "platinum"
+      }
+    },
+    {
+      "username": "sales",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Sam",
+      "lastName": "Smith",
+      "email": "sam.smith@example.com",
+      "credentials": [
+        { "type": "password", "value": "password123", "temporary": false }
+      ],
+      "realmRoles": ["user"],
+      "clientRoles": {
+        "enterprise-portal-client-id": ["portal-user"]
+      },
+      "groups": ["/employee", "/employee/part-time", "/sales"],
+      "attributes": {
+        "department": "Cold-Call",
+        "entitlementLevel": "gold"
+      }
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Gerrit",
+      "lastName": "Gopher",
+      "email": "go@example.com",
+      "credentials": [
+        { "type": "password", "value": "password123", "temporary": false }
       ],
       "realmRoles": ["user", "admin"],
       "clientRoles": {
         "enterprise-portal-client-id": ["portal-user", "portal-admin"]
       },
-      "groups": ["/staff/executive", "/c-suit"],
+      "groups": ["/employee"],
       "attributes": {
-        "department": "Finance",
-        "entitlementLevel": "platinum"
+        "department": "C-Suite",
+        "entitlementLevel": "Blue Diamond"
       }
     }
   ]

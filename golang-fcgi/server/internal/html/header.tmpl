@@ -7,7 +7,6 @@
             <span>Portal</span>
         </div>
         <div class="portalHeaderItems">
-            {{- if .Authenticated }}
             <p>{{ .Name }}</p>
             <button class="user-menu">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -16,7 +15,6 @@
                         d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
                 </svg>
             </button>
-            {{end -}}
             <button class="notifications">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <title>Notification Bell</title>
@@ -28,10 +26,38 @@
     </div>
     <nav>
         <menu>
-            <li><button>Employee Resources</button></li>
-            <li><button>Sales Resources</button></li>
-            <li><button>CSR Resources</button></li>
-            <li><button>People Management</button></li>
+            {{if or (.HasGroupMembership "employee") (.HasRole "portal-admin")}}
+            <li><button>Employee Resources</button>
+                <menu>
+                    <!--#include virtual="/dashboard/employee/lib/includes/nav.inc" -->
+                </menu>
+            </li>
+            {{end}}
+            {{if or (.HasGroupMembership "sales") (.HasRole "portal-admin")}}
+            <li><button>Sales Resources</button>
+                <menu>
+                    <!--#include virtual="/dashboard/sales/lib/includes/nav.inc" -->
+                </menu>
+            </li>
+            {{end}}
+            {{if or (.HasGroupMembership "csr") (.HasRole "portal-admin")}}
+            <li><button>CSR Resources</button>
+                <menu>
+                    <!--#include virtual="/dashboard/customer-service/lib/includes/nav.inc" -->
+                </menu>
+            </li>
+            {{end}}
+            {{if or (.HasGroupMembership "team-lead") (.HasRole "portal-admin")}}
+            <li><button>People Management</button>
+                <menu>
+                    <!--#include virtual="/dashboard/hr/lib/includes/nav.inc" -->
+                </menu>
+            </li>
+            {{end}}
+            <li>
+                <a id="logout"
+                    href="/.oidc?logout=http://localhost&client_id=enterprise-portal-client-id&prompt=none">Sign Out</a>
+            </li>
         </menu>
     </nav>
 </header>

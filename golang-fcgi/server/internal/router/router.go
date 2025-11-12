@@ -24,7 +24,7 @@ func CreateRouter(app *internal.Application) http.Handler {
 
 		user := app.CurrentReqContext.Value(internal.UserContext("user")).(models.User)
 
-		template.Execute(res, user)
+		template.Execute(res, &user)
 	})
 
 	server.HandleFunc("GET /footer.go", func(res http.ResponseWriter, req *http.Request) {
@@ -36,7 +36,7 @@ func CreateRouter(app *internal.Application) http.Handler {
 
 		user := app.CurrentReqContext.Value(internal.UserContext("user")).(models.User)
 
-		template.Execute(res, user)
+		template.Execute(res, &user)
 	})
 
 	server.HandleFunc("GET /user", func(res http.ResponseWriter, req *http.Request) {
