@@ -12,8 +12,9 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: temppassword
       KEYCLOAK_ADMIN: keycloakadmin
       KEYCLOAK_ADMIN_PASSWORD: keycloakadminpassword
-      KC_HOSTNAME: localhost
+      KC_HOSTNAME: http://localhost:8080
       KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_ADMIN: http://localhost:5000
     volumes:
       - ./idp:/opt/keycloak/data/import
     # ports:
@@ -31,8 +32,8 @@ services:
     depends_on:
       - keycloak
     volumes:
-      - "./sftp_content:/var/www/html/1.25.3/:ro"
-      - "./sftp_content:/var/www/html/:ro"
+      - "./sftp_content:/var/www/html/1.25.3/"
+      - "./sftp_content:/var/www/html/"
     networks:
       - enterprise
 
