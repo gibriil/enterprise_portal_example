@@ -47,7 +47,7 @@ Modern Campus SFTPs static files to an SFTP location. That SFTP location could e
     - **A:** No, you should be able to use any server that works with SSI (Server Side Includes) following the format `<!--#include virtual="<some path>" -->` and FCGI/CGI. I believe this would at least be Apache, ASP.Net, and NGINX.
 
 - **Q:** Why not do the whole server in Go, why use FCGI Proxy?
-    - You could certainly do that. This model is really dependant on how your organization is structured. An example may be that you have a department of server admins who really don't code, a department that handles server side scripting, a department that handles front-end web, and/or CMS users across your organization. If you have specialized teams, it likely wouldn't make sense to have one tightly coupled system.<br /><br />
+    - **A:** You could certainly do that. This model is really dependant on how your organization is structured. An example may be that you have a department of server admins who really don't code, a department that handles server side scripting, a department that handles front-end web, and/or CMS users across your organization. If you have specialized teams, it likely wouldn't make sense to have one tightly coupled system.<br /><br />
     This also allows you to use servers like Apache and Nginx to serve static content, which they are designed to do and do very well.
 
 - **Q:** Do I have to use Go?
