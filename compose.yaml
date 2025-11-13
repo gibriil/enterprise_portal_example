@@ -6,27 +6,30 @@ services:
     container_name: apache
     ports:
       - "80:80"
+      - "8500:8500"
     volumes:
-      - "./sftp_content:/usr/local/apache2/htdocs/1.25.3/"
-      - "./sftp_content:/usr/local/apache2/htdocs/"
+      - "./sftp_content/.htaccess:/usr/local/apache2/htdocs/.htaccess"
+      - "./sftp_content/index.html:/usr/local/apache2/htdocs/index.html"
+      - "./sftp_content/1.25.3/.htaccess:/usr/local/apache2/htdocs/1.25.3/.htaccess"
+      - "./sftp_content/index.html:/usr/local/apache2/htdocs/1.25.3/index.html"
     networks:
       - fcgi
 
-  # pre-change-715680:
-  #   build:
-  #     context: ./golang-fcgi
-  #     dockerfile: Dockerfile.fail
-  #   container_name: broken_go
-  #   networks:
-  #     - fcgi
+  pre-change-715680:
+    build:
+      context: ./golang-fcgi
+      dockerfile: Dockerfile.fail
+    container_name: broken_go
+    networks:
+      - fcgi
 
-  # golang:
-  #   build:
-  #     context: ./golang-fcgi
-  #     dockerfile: Dockerfile.success
-  #   container_name: working_go
-  #   networks:
-  #     - fcgi
+  golang:
+    build:
+      context: ./golang-fcgi
+      dockerfile: Dockerfile.success
+    container_name: working_go
+    networks:
+      - fcgi
 
 networks:
   fcgi: {}

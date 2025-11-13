@@ -56,7 +56,7 @@ var cardTemplate = `
 					 	<li>
 							<article class="card card-%s">
 								<header>{{ .Title }}</header>
-								 <img src="https://picsum.photos/69{{- $i -}}/40{{- $i -}}?random=%s" />
+								 <img src="https://picsum.photos/69{{- $i -}}/40{{- $i -}}?random=%s" loading="lazy" />
 								 <p class="description">{{ .Body }}</p>
 							 </article>
 						</li>

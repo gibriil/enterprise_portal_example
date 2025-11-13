@@ -12,7 +12,7 @@ FROM scratch
 COPY --from=build /usr/share/zoneinfo /usr/share/zoneinfo
 COPY --from=build /usr/share/zoneinfo/America/Denver /etc/localtime
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=build /app/etc/ /etc
+# COPY --from=build /app/etc/ /etc
 COPY --from=build /app/bin/server /app/bin/
 
 EXPOSE 9000

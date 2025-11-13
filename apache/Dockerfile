@@ -14,6 +14,7 @@ RUN sed -i \
 
 COPY httpd.conf /usr/local/apache2/conf/extra/000-default.conf
 
+RUN echo "Listen 8500" >> /usr/local/apache2/conf/httpd.conf
 RUN echo "Include conf/extra/000-default.conf" >> /usr/local/apache2/conf/httpd.conf
 
 EXPOSE 80

@@ -3,4 +3,4 @@ SetOutputFilter INCLUDES
 
 ProxyFCGISetEnvIf true REQUEST_URI
 RewriteEngine On
-RewriteRule ^(.*\.go)$ "fcgi://working_go:9000/$1" [P,L,E=REQUEST_URI:]
+RewriteRule ^(.*\.go)$ "fcgi://broken_go:9000/$1" [P,L,E=REQUEST_URI:]
