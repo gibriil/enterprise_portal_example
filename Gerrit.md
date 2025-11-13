@@ -20,7 +20,7 @@ There are two examples in this repo meant to show the use case for SSI, Server S
     - Working Example: [localhost](http://localhost/)
     - Pre-change Example: [localhost:8500](http://localhost:8500/)
 
-*Login credentials are detailed in the [README](README.md)*
+*Login credentials are detailed in the [README](README.md#portal-users-and-credentials)*
 
 ## Explanation of the Example
 *For a more simplified example please see the [simple-ssi-fcgi branch](https://github.com/gibriil/enterprise_portal_example/tree/simple-ssi-fcgi)*
